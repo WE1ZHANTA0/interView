@@ -1,0 +1,93 @@
+<!--
+ * @description: 
+ * @Author: WE1ZHANTA0
+ * @Creat: 2020-06-03 14:38:15
+ * @lastTime: 2020-06-03 14:53:04
+ * @LastAuthor: WE1ZHANTA0
+--> 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>拖放</title>
+</head>
+<style>
+  .draggable{
+    width: 100px;
+    height: 100px;
+  }
+</style>
+<body>
+  <div class="draggable" style="position:absolute; background:red"> </div>
+</body>
+<script>
+const EventUtil = {
+  getEvent(event) {
+    return event || window.event
+  },
+  getTarget(event) {
+    return event.target
+  },
+  addHandler(element, type, handler) {
+    if (element.addEventListener) {        //DOM2级
+      element.addEventListener(type, handler, false);
+    } else if (element.attachEvent) {      //DOM1级
+      element.attachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = handler;    //DOM0级
+    }
+  },
+  removeHandler: function (element, type, handler) {   //类似addHandler
+    if (element.removeEventListener) {
+      element.removeEventListener(type, handler, false);
+    } else if (element.detachEvent) {
+      element.detachEvent("on" + type, handler);
+    } else {
+      element["on" + type] = null;
+    }
+  }
+}
+var DragDrop = function(){
+  var dragging = null; 
+  function handleEvent(event){
+    
+    //获取事件和目标
+    event = EventUtil.getEvent(event);
+    var target = EventUtil.getTarget(event);
+    
+    //确定事件类型 
+    switch(event.type){
+      case "mousedown":
+        if (target.className.indexOf("draggable") > -1){
+          dragging = target; 
+        }
+        break;
+      case "mousemove":
+        if (dragging !== null){ 
+          //指定位置
+          dragging.style.left = event.clientX + "px";
+          dragging.style.top = event.clientY + "px";
+        }
+        break;
+      case "mouseup": 
+        dragging = null;
+        break; 
+    }
+  };
+  //公共接口 
+  return {
+    enable: function(){
+      EventUtil.addHandler(document, "mousedown", handleEvent);
+      EventUtil.addHandler(document, "mousemove", handleEvent);
+      EventUtil.addHandler(document, "mouseup", handleEvent);
+    },
+    disable: function(){
+      EventUtil.removeHandler(document, "mousedown", handleEvent);
+      EventUtil.removeHandler(document, "mousemove", handleEvent);
+      EventUtil.removeHandler(document, "mouseup", handleEvent);
+    }
+  }
+}()
+DragDrop.enable()
+</script>
+</html>
