@@ -1,0 +1,33 @@
+<!--
+ * @description: 
+ * @Author: WE1ZHANTA0
+ * @Creat: 2021-04-14 11:11:05
+ * @lastTime: 2021-04-14 11:19:11
+ * @LastAuthor: WE1ZHANTA0
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+</head>
+<body>
+  <button id="btn">testBtn</button>
+</body>
+</html>
+
+<script>
+  const button = document.getElementById('btn')
+  Promise.resolve().then(res => {
+    console.log(111)
+  })
+  button.addEventListener('click',()=>{
+      console.log('listener1');
+      Promise.resolve().then(()=>console.log('micro task1'))
+  })
+  button.addEventListener('click',()=>{
+      console.log('listener2');
+      Promise.resolve().then(()=>console.log('micro task2'))
+  })
+  button.click(); // click1() click2()
+</script>
